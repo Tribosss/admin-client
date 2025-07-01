@@ -26,7 +26,7 @@ namespace admin_client
             RootGrid.Children.Add(control);
         }
 
-        public void handleSuccessLogin(AdminAuth auth)
+        public void handleSuccessLogin()
         {
             RootGrid.Children.Clear();
             RootGrid.Children.Add(new StaffManageControl());
