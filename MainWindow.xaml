@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:admin_client"
         mc:Ignorable="d"
+        Background="#E1E1E1"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Name="RootGrid">
 
     </Grid>
 </Window>

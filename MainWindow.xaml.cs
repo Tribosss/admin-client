@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using admin_client.View;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,16 @@ namespace admin_client
         public MainWindow()
         {
             InitializeComponent();
+            RootGrid.Children.Clear();
+            LoginControl control = new LoginControl();
+            control.SuccessLoginEvent += handleSuccessLogin;
+            RootGrid.Children.Add(control);
+        }
+
+        public void handleSuccessLogin(AdminAuth auth)
+        {
+            RootGrid.Children.Clear();
+            RootGrid.Children.Add(new StaffManageControl());
         }
     }
 }
