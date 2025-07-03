@@ -17,5 +17,8 @@
     <Compile Update="View\StaffManageControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ViewLogControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
