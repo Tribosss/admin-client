@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:admin_client"
         mc:Ignorable="d"
         Background="#E1E1E1"
-        Title="MainWindow" Height="500" Width="850">
+        Title="MainWindow" Height="600" Width="1060">
     <Grid Name="RootGrid">
 
     </Grid>

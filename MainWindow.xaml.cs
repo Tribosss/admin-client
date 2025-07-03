@@ -35,7 +35,7 @@ namespace admin_client
             RootGrid.Children.Clear();
             SideBar snbControl = new SideBar(userData);
             snbControl.NavigateEvent += HandleNavigateControl;
-            RootGrid.Children.Add();
+            RootGrid.Children.Add(snbControl);
             RootGrid.Children.Add(new DashBoardControl(userData));
         }
 

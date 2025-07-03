@@ -38,17 +38,20 @@ namespace admin_client.View
 
         private void PolicyNav_Click(object sender, RoutedEventArgs e)
         {
-            
+            SetPolicyControl control = new SetPolicyControl();
+            NavigateEvent?.Invoke(control);
         }
 
         private void LogViewNav_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewLogControl control = new ViewLogControl();
+            NavigateEvent?.Invoke(control);
         }
 
         private void StaffManageNav_Click(object sender, RoutedEventArgs e)
         {
-
+            StaffManageControl control = new StaffManageControl(); 
+            NavigateEvent?.Invoke(control);
         }
     }
 }
