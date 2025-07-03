@@ -1,4 +1,5 @@
-﻿using DotNetEnv;
+﻿using admin_client.Model;
+using DotNetEnv;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,17 @@ namespace admin_client.ViewModel
             {
                 Env.Load();
 
+
                 host = Environment.GetEnvironmentVariable("DB_HOST");
-                if (host == null) return false;
+                if (host == null) throw new Exception(".env DB_HOST is null");
                 port = Environment.GetEnvironmentVariable("DB_PORT");
-                if (port == null) return false;
+                if (port == null) throw new Exception(".env DB_PORT is null");
                 uid = Environment.GetEnvironmentVariable("DB_UID");
-                if (uid == null) return false;
+                if (uid == null) throw new Exception(".env DB_UID is null"); ;
                 pwd = Environment.GetEnvironmentVariable("DB_PWD");
-                if (pwd == null) return false;
+                if (pwd == null) throw new Exception(".env DB_PWD is null");
                 name = Environment.GetEnvironmentVariable("DB_NAME");
-                if (name == null) return false;
+                if (name == null) throw new Exception(".env DB_NAME is null");
 
                 dbConnection = $"Server={host};Port={port};Database={name};Uid={uid};Pwd={pwd}";
 
@@ -36,10 +38,9 @@ namespace admin_client.ViewModel
                 {
                     connection.Open();
 
-                    string selectQuery = "select a.login_id, a.password from employees as e ";
+                    string selectQuery = "select e.id, e.password from employees as e ";
                     selectQuery += "inner join role r on r.id=e.role_id ";
-                    selectQuery += "inner join auth a on a.id=e.id ";
-                    selectQuery += $"where r.id=1 and a.login_id='{auth.LoginId}' and a.password='{auth.Password}' ";
+                    selectQuery += $"where r.id=1 and e.id='{auth.LoginId}' and e.password='{auth.Password}' ";
                     selectQuery += "limit 1;";
 
                     MySqlCommand cmd = new MySqlCommand(selectQuery, connection);
@@ -66,6 +67,63 @@ namespace admin_client.ViewModel
             {
                 Console.WriteLine(e.ToString());
                 return false;
+            }
+        }
+        public UserData GetUserData(AdminAuth auth)
+        {
+            string? host, port, uid, pwd, name;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                host = Environment.GetEnvironmentVariable("DB_HOST");
+                if (host == null) throw new Exception(".env DB_HOST is null");
+                port = Environment.GetEnvironmentVariable("DB_PORT");
+                if (port == null) throw new Exception(".env DB_PORT is null");
+                uid = Environment.GetEnvironmentVariable("DB_UID");
+                if (uid == null) throw new Exception(".env DB_UID is null"); ;
+                pwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (pwd == null) throw new Exception(".env DB_PWD is null");
+                name = Environment.GetEnvironmentVariable("DB_NAME");
+                if (name == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={host};Port={port};Database={name};Uid={uid};Pwd={pwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    string selectQuery = "select e.id, e.name, r.position from employees as e ";
+                    selectQuery += "inner join role r on r.id=e.role_id ";
+                    selectQuery += $"where r.id=1 and e.id='{auth.LoginId}' and e.password='{auth.Password}' ";
+                    selectQuery += "limit 1;";
+
+                    MySqlCommand cmd = new MySqlCommand(selectQuery, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) throw new Exception("MySqlDataReader is null");
+                    if (!rdr.Read()) throw new Exception("MySqlDataReader is empty");
+
+                    string currentId = rdr[0].ToString()!;
+                    string currentName = rdr[1].ToString()!;
+                    string currentPosition = rdr[2].ToString()!;
+
+                    if (currentId == null || currentName == null || currentPosition == null) return null;
+
+                    UserData userData = new UserData()
+                    {
+                        Id = currentId,
+                        Name = currentName,
+                        Position = currentPosition
+                    };
+                    return userData;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
             }
         }
     }

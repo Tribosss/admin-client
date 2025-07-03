@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using admin_client.Model;
 using admin_client.ViewModel;
 
 namespace admin_client.View
@@ -11,17 +12,17 @@ namespace admin_client.View
     {
         private readonly LoginViewModel _viewModel;
 
-        internal event Action? SuccessLoginEvent;
+        internal event Action<UserData>? SuccessLoginEvent;
         public LoginControl()
         {
             InitializeComponent();
             _viewModel = this.DataContext as LoginViewModel ?? new LoginViewModel();
             this.DataContext = _viewModel;
         }
-
+         
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            string loginId = LoginIdInput.Text;
+            string loginId = IdInput.Text;
             string password = PasswordInput.Text;
             AdminAuth auth = new AdminAuth
             {
@@ -35,8 +36,9 @@ namespace admin_client.View
             {
                 return;
             }
+            UserData userData = _viewModel.GetUserData(auth);
 
-            SuccessLoginEvent?.Invoke();
+            SuccessLoginEvent?.Invoke(userData);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using admin_client.View;
+﻿using admin_client.Model;
+using admin_client.View;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,19 +18,31 @@ namespace admin_client
     /// </summary>
     public partial class MainWindow : Window
     {
+        private UserData _userData = null;
         public MainWindow()
         {
             InitializeComponent();
             RootGrid.Children.Clear();
             LoginControl control = new LoginControl();
-            control.SuccessLoginEvent += handleSuccessLogin;
+            control.SuccessLoginEvent += HandleSuccessLogin;
             RootGrid.Children.Add(control);
         }
 
-        public void handleSuccessLogin()
+        public void HandleSuccessLogin(UserData userData)
         {
+            _userData = userData;
+
             RootGrid.Children.Clear();
-            RootGrid.Children.Add(new StaffManageControl());
+            SideBar snbControl = new SideBar(userData);
+            snbControl.NavigateEvent += HandleNavigateControl;
+            RootGrid.Children.Add();
+            RootGrid.Children.Add(new DashBoardControl(userData));
+        }
+
+        private void HandleNavigateControl(UserControl control)
+        {
+            RootGrid.Children.RemoveAt(1);
+            RootGrid.Children.Add(control);
         }
     }
 }

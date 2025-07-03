@@ -10,8 +10,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Src\Image\DashBoardIcon.png" />
+    <None Remove="Src\Image\LogViewIcon.png" />
+    <None Remove="Src\Image\ProfileIcon.png" />
+    <None Remove="Src\Image\SetPolicyIcon.png" />
+    <None Remove="Src\Image\StaffManageIcon.png" />
+    <None Remove="Src\Image\TribossLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="MySql.Data" Version="9.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Src\Image\DashBoardIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\LogViewIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\ProfileIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\SetPolicyIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\StaffManageIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\TribossLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

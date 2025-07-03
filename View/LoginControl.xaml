@@ -22,21 +22,32 @@
                                    Margin="0,0,0,20"/>
 
                         <StackPanel>
-                            <TextBox Height="40"
-                                     Name="LoginIdInput"
-                                         VerticalContentAlignment="Center"
-                                         FontSize="14"
-                                         Foreground="#666"
-                                         Padding="8 0"
-                                         Margin="0 8"
-                                         Text="아이디를 입력하세요"/>
-                            <TextBox Height="40"
-                                     Name="PasswordInput"
-                                             VerticalContentAlignment="Center"
-                                             FontSize="14"
-                                             Foreground="#666"
-                                             Text="비밀번호를 입력하세요"
-                                         Padding="8 0"/>
+                            <TextBox  Width="350" Height="40" Padding="8 11"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="IdInput"/>
+                            <TextBlock IsHitTestVisible="False" Text="아이디를 입력하세요" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,-40,0,0" Foreground="DarkGray">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=IdInput}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBox  Width="350" Height="40"  Padding="8 11" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="PasswordInput"/>
+                            <TextBlock IsHitTestVisible="False" Text="비밀번호를 입력하세요" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,-40,0,0" Foreground="DarkGray">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=PasswordInput}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </StackPanel>
 
                         <Button Content="로그인"
