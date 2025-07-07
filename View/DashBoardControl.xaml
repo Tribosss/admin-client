@@ -5,8 +5,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:admin_client.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             Background="#e1e1e1"
+             d:DesignHeight="600" d:DesignWidth="1060">
+    <Grid Margin="160 0 0 0">
+        <TextBlock FontSize="24" FontWeight="Black" Width="840" Margin="0 30 0 0">대시보드</TextBlock>
+        <Grid Margin="0 85 0 0" Width="840" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="1.5*" />
+            </Grid.RowDefinitions>
+
+            <Border BorderBrush="#868686" BorderThickness="1" Margin="0 0 0 20">
+                <StackPanel Name="bbbb" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Width="840">
+                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Height="130" Margin="50 0 10 0">
+                    
+                    </Border>
+                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0">
+                    
+                    </Border>
+                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0">
+                    
+                    </Border>
+                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0 50 0">
+
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#868686" BorderThickness="1" Grid.Row="1" >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
