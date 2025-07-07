@@ -22,12 +22,13 @@ namespace admin_client.View
     public partial class SideBar : UserControl
     {
         public Action<UserControl>? NavigateEvent;
+        public Action<UserData>? ShowClickUserRow;
         private UserData _userData = null;
         public SideBar(UserData userData)
         {
             InitializeComponent();
             _userData = userData;
-            EmpId.Text += userData.Id;
+            EmpId.Text += " " + userData.Id;
         }
 
         private void DashBoardNav_Click(object sender, RoutedEventArgs e)
@@ -50,7 +51,8 @@ namespace admin_client.View
 
         private void StaffManageNav_Click(object sender, RoutedEventArgs e)
         {
-            StaffManageControl control = new StaffManageControl(); 
+            StaffManageControl control = new StaffManageControl();
+            control.ShowClickUserRow += ShowClickUserRow.Invoke;
             NavigateEvent?.Invoke(control);
         }
     }

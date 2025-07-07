@@ -59,6 +59,7 @@ namespace admin_client.ViewModel
                         Password = currentPassword,
                     };
 
+                    connection.Close();
                     return true;
                 }
 

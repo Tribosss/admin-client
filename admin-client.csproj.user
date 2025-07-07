@@ -2,6 +2,9 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="Components\UserSearch.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\DashBoardControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -11,10 +14,13 @@
     <Compile Update="View\SetPolicyControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\SideBar.xaml.cs">
+    <Compile Update="Components\SideBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\StaffManageControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UpdateUserWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\ViewLogControl.xaml.cs">
