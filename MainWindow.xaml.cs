@@ -28,6 +28,7 @@ namespace admin_client
             SideBar snbControl = new SideBar(userData);
             snbControl.NavigateEvent += HandleNavigateControl;
             snbControl.ShowClickUserRow += ShowUpdateUserWindow;
+            snbControl.ShowSignUpRequestors += ShowSignUpRequestors;
             RootGrid.Children.Add(snbControl);
             RootGrid.Children.Add(new DashBoardControl(userData));
         }
@@ -46,8 +47,17 @@ namespace admin_client
             // ShowDialog()가 닫힐 때까지 이 라인 이후 코드가 대기합니다.
             if (result == true)
             {
-                // 다이얼로그에서 DialogResult = true 로 닫혔을 때 처리
+
             }
+        }
+        private void ShowSignUpRequestors()
+        {
+            SignUpRequestWindow popup = new SignUpRequestWindow();
+            popup.Owner = this;           // 반드시 Owner를 지정하세요
+            bool? result = popup.ShowDialog();
+            // ShowDialog()가 닫힐 때까지 이 라인 이후 코드가 대기합니다.
+            RootGrid.Children.RemoveAt(1);
+            RootGrid.Children.Add(new StaffManageControl());
         }
     }
 }

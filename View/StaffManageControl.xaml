@@ -8,6 +8,21 @@
              d:DesignHeight="600" d:DesignWidth="1060">
     <Grid Margin="160 0 0 0">
         <TextBlock FontSize="24" FontWeight="Black" Width="840" Margin="0 30 0 0">사원 관리</TextBlock>
+
+        <Button Click="CheckSignUpRequestBtn_Click" x:Name="CheckSignUpRequestBtn" Margin="0 50 23 0" Padding="10 5" Height="30" BorderBrush="#8c8c8c" BorderThickness="2" Background="#D9D9D9" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Span>
+                <Run>가입 요청</Run>
+                <Run x:Name="SignUpRequestCount" Text="0">
+                    <Run.Style>
+                        <Style TargetType="Run">
+                            <Setter Property="Foreground" Value="#3AC7CD"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="TextDecorations" Value="Underline"/>
+                        </Style>
+                    </Run.Style>
+                </Run>
+            </Span>
+        </Button>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Width="840" Margin="0 85 0 0">
             <StackPanel Orientation="Horizontal" Width="780">
                 <TextBlock Text="ID" Margin="0 0 10 0" FontSize="15" VerticalAlignment="Center"></TextBlock>

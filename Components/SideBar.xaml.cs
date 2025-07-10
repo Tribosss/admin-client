@@ -23,6 +23,7 @@ namespace admin_client.View
     {
         public Action<UserControl>? NavigateEvent;
         public Action<UserData>? ShowClickUserRow;
+        public Action? ShowSignUpRequestors;
         private UserData _userData = null;
         public SideBar(UserData userData)
         {
@@ -53,6 +54,7 @@ namespace admin_client.View
         {
             StaffManageControl control = new StaffManageControl();
             control.ShowClickUserRow += ShowClickUserRow.Invoke;
+            control.ShowSignUpRequestors += ShowSignUpRequestors.Invoke;
             NavigateEvent?.Invoke(control);
         }
     }

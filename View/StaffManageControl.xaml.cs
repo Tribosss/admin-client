@@ -14,6 +14,7 @@ namespace admin_client.View
     public partial class StaffManageControl : UserControl
     {
         public Action<UserData>? ShowClickUserRow;
+        public Action? ShowSignUpRequestors;
         public ObservableCollection<UserData> UserDataList { get;  } = new ObservableCollection<UserData>();
         public StaffManageControl()
         {
@@ -21,6 +22,8 @@ namespace admin_client.View
             this.DataContext = this;
 
             GetUserListByKeyword("", "", "");
+            int requestCount = GetSignUpRequestCount();
+            SignUpRequestCount.Text = requestCount.ToString();
         }
 
         private void UserFilterButton_Click(object sender, RoutedEventArgs e)
@@ -30,6 +33,52 @@ namespace admin_client.View
             string nameKey = FilterNameBox.Text;
 
             GetUserListByKeyword(idKey, positionKey, nameKey);
+        }
+
+        private int GetSignUpRequestCount()
+        {
+            string query = "select count(id) from signup_requests where is_allow=false";
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return 0;
+                    if (!rdr.Read()) return 0;
+
+                    int count = Int32.Parse(rdr[0].ToString()!);
+
+                    connection.Close();
+                    return count;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return 0;
+            }
         }
 
         private void GetUserListByKeyword(string idKey, string positionKey, string nameKey)
@@ -108,6 +157,13 @@ namespace admin_client.View
             if (!(sender is DataGridRow row && row.Item is UserData clickedUserData)) return;
 
             ShowClickUserRow.Invoke(clickedUserData);
+        }
+
+        private void CheckSignUpRequestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ShowSignUpRequestors == null) return;
+
+            ShowSignUpRequestors.Invoke();
         }
     }
 }

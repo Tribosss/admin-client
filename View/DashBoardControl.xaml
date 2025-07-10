@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:admin_client.View"
              mc:Ignorable="d" 
-             Background="#e1e1e1"
+             
              d:DesignHeight="600" d:DesignWidth="1060">
     <Grid Margin="160 0 0 0">
         <TextBlock FontSize="24" FontWeight="Black" Width="840" Margin="0 30 0 0">대시보드</TextBlock>
@@ -34,7 +34,7 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Border BorderBrush="#868686" BorderThickness="1" Grid.Row="1" >
+            <Border BorderBrush="#868686" BorderThickness="1" Grid.Row="1" Margin="0 0 0 20">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 
                 </StackPanel>
