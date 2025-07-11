@@ -37,7 +37,7 @@ namespace admin_client.View
 
         private int GetSignUpRequestCount()
         {
-            string query = "select count(id) from signup_requests where is_allow=false";
+            string query = "select count(id) from signup_requests where is_allow=false and is_deny=false;";
             string? dbHost, dbPort, dbUid, dbPwd, dbName;
             string dbConnection;
 

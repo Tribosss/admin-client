@@ -42,20 +42,14 @@ namespace admin_client
         private void ShowUpdateUserWindow(UserData userData)
         {
             UpdateUserWindow popup = new UpdateUserWindow(userData);
-            popup.Owner = this;           // 반드시 Owner를 지정하세요
+            popup.Owner = this;           
             bool? result = popup.ShowDialog();
-            // ShowDialog()가 닫힐 때까지 이 라인 이후 코드가 대기합니다.
-            if (result == true)
-            {
-
-            }
         }
         private void ShowSignUpRequestors()
         {
             SignUpRequestWindow popup = new SignUpRequestWindow();
-            popup.Owner = this;           // 반드시 Owner를 지정하세요
+            popup.Owner = this;           
             bool? result = popup.ShowDialog();
-            // ShowDialog()가 닫힐 때까지 이 라인 이후 코드가 대기합니다.
             RootGrid.Children.RemoveAt(1);
             RootGrid.Children.Add(new StaffManageControl());
         }
