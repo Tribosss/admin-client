@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:admin_client.View"
              mc:Ignorable="d" 
-             
+             xmlns:vm="clr-namespace:admin_client.ViewModel"
              d:DesignHeight="600" d:DesignWidth="1060">
+    <Control.DataContext>
+        <vm:DashBoardViewModel/>
+    </Control.DataContext>
     <Grid Margin="160 0 0 0">
         <TextBlock FontSize="24" FontWeight="Black" Width="840" Margin="0 30 0 0">대시보드</TextBlock>
         <Grid Margin="0 85 0 0" Width="840" HorizontalAlignment="Center">
@@ -15,28 +18,153 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="1.5*" />
+                <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="#868686" BorderThickness="1" Margin="0 0 0 20">
+            <Border BorderBrush="#868686" BorderThickness="2" Margin="0 0 0 20">
                 <StackPanel Name="bbbb" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Width="840">
-                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Height="130" Margin="50 0 10 0">
-                    
+                    <Border BorderBrush="#868686" BorderThickness="1" Width="170" Height="110" Margin="50 0 10 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="2.5*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Source="/Src/Image/plus-solid.png" Width="15" HorizontalAlignment="Right" Margin="0 0 15 0"></Image>
+                            <TextBlock Height="16" VerticalAlignment="Top" Grid.Row="1" FontSize="12" FontWeight="SemiBold" Margin="15 0 0 0">사원 수</TextBlock>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="67*" />
+                                    <ColumnDefinition Width="99*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
+                                    <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
+                                        <Span>
+                                            <Run x:Name="StaffCount" Text="{Binding StaffCount}">
+                                                <Run.Style>
+                                                    <Style TargetType="Run">
+                                                        <Setter Property="Foreground" Value="#3AC7CD"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="TextDecorations" Value="Underline"/>
+                                                    </Style>
+                                                </Run.Style>
+                                            </Run>
+                                        </Span>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Image Grid.Column="1" Source="/Src/Image/StaffCountIcon.png" Width="100" Height="65" Margin="0 -25 0 0"></Image>
+                            </Grid>
+                        </Grid>
                     </Border>
-                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0">
-                    
+                    <Border BorderBrush="#868686" BorderThickness="1" Width="170" Margin="10 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="2.5*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Source="/Src/Image/plus-solid.png" Width="15" HorizontalAlignment="Right" Margin="0 0 15 0"></Image>
+                            <TextBlock Height="16" VerticalAlignment="Top" Grid.Row="1" FontSize="11" FontWeight="SemiBold" Margin="15 0 0 0">게시물 수</TextBlock>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="67*" />
+                                    <ColumnDefinition Width="99*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
+                                    <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
+                                        <Span>
+                                            <Run x:Name="BoardCount" Text="{Binding BoardCount}">
+                                                <Run.Style>
+                                                    <Style TargetType="Run">
+                                                        <Setter Property="Foreground" Value="#9B9B9B"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="TextDecorations" Value="Underline"/>
+                                                    </Style>
+                                                </Run.Style>
+                                            </Run>
+                                        </Span>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Image Grid.Column="1" Source="/Src/Image/BoardIcon.png" Width="100" Height="65" Margin="0 -25 0 0"></Image>
+                            </Grid>
+                        </Grid>
                     </Border>
-                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0">
-                    
+                    <Border BorderBrush="#868686" BorderThickness="1" Width="170" Height="110" Margin="10 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="2.5*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Source="/Src/Image/plus-solid.png" Width="15" HorizontalAlignment="Right" Margin="0 0 15 0"></Image>
+                            <TextBlock Height="16" VerticalAlignment="Top" Grid.Row="1" FontSize="11" FontWeight="SemiBold" Margin="15 0 0 0">유출 탐지 건수</TextBlock>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="67*" />
+                                    <ColumnDefinition Width="99*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
+                                    <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
+                                        <Span>
+                                            <Run x:Name="ClientSecurityCount" Text="{Binding ClientSecurityCount}">
+                                                <Run.Style>
+                                                    <Style TargetType="Run">
+                                                        <Setter Property="Foreground" Value="#FFB96F"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="TextDecorations" Value="Underline"/>
+                                                    </Style>
+                                                </Run.Style>
+                                            </Run>
+                                        </Span>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Image Grid.Column="1" Source="/Src/Image/ClientSecurityIcon.png" Width="100" Height="65" Margin="0 -25 0 0"></Image>
+                            </Grid>
+                        </Grid>
                     </Border>
-                    <Border BorderBrush="#868686" BorderThickness="2" Width="170" Margin="10 0 50 0">
+                    <Border BorderBrush="#868686" BorderThickness="1" Width="170" Margin="10 0 50 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="2.5*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Source="/Src/Image/plus-solid.png" Width="15" HorizontalAlignment="Right" Margin="0 0 15 0"></Image>
+                            <TextBlock Height="16" VerticalAlignment="Top" Grid.Row="1" FontSize="11" FontWeight="SemiBold" Margin="15 0 0 0">침입 탐지 건수</TextBlock>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="67*" />
+                                    <ColumnDefinition Width="99*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
+                                    <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
+                                        <Span>
+                                            <Run x:Name="ServerSecurityCount" Text="{Binding ServerSecurityCount}">
+                                                <Run.Style>
+                                                    <Style TargetType="Run">
+                                                        <Setter Property="Foreground" Value="#FF5555"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="TextDecorations" Value="Underline"/>
+                                                    </Style>
+                                                </Run.Style>
+                                            </Run>
+                                        </Span>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Image Grid.Column="1" Source="/Src/Image/ServerSecurityIcon.png" Width="100" Height="65" Margin="0 -25 0 0"></Image>
+                            </Grid>
+                        </Grid>
 
                     </Border>
                 </StackPanel>
             </Border>
-            <Border BorderBrush="#868686" BorderThickness="1" Grid.Row="1" Margin="0 0 0 20">
+            <Border BorderBrush="#868686" BorderThickness="2" Grid.Row="1" Margin="0 0 0 20">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                
+
                 </StackPanel>
             </Border>
         </Grid>

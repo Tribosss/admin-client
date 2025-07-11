@@ -10,10 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Src\Image\BoardIcon.png" />
+    <None Remove="Src\Image\ClientSecurityIcon.png" />
     <None Remove="Src\Image\DashBoardIcon.png" />
     <None Remove="Src\Image\LogViewIcon.png" />
+    <None Remove="Src\Image\plus-solid.png" />
+    <None Remove="Src\Image\plus-solid.svg" />
     <None Remove="Src\Image\ProfileIcon.png" />
+    <None Remove="Src\Image\ServerSecurityIcon.png" />
     <None Remove="Src\Image\SetPolicyIcon.png" />
+    <None Remove="Src\Image\StaffCountIcon.png" />
     <None Remove="Src\Image\StaffManageIcon.png" />
     <None Remove="Src\Image\TribossLogo.png" />
   </ItemGroup>
@@ -24,16 +30,34 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Src\Image\BoardIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\ClientSecurityIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Src\Image\DashBoardIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Src\Image\LogViewIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Src\Image\plus-solid.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\plus-solid.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Src\Image\ProfileIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Src\Image\ServerSecurityIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Src\Image\SetPolicyIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Src\Image\StaffCountIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Src\Image\StaffManageIcon.png">
