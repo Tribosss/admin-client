@@ -109,7 +109,7 @@
                                 <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
                                     <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
                                         <Span>
-                                            <Run x:Name="ClientSecurityCount" Text="{Binding ClientSecurityCount}">
+                                            <Run x:Name="ClientSecurityCount" Text="{Binding OutflowCount}">
                                                 <Run.Style>
                                                     <Style TargetType="Run">
                                                         <Setter Property="Foreground" Value="#FFB96F"/>
@@ -143,7 +143,7 @@
                                 <StackPanel Grid.ColumnSpan="2" Margin="0,0,99,0">
                                     <TextBlock FontSize="15" FontWeight="bold" Foreground="#333" Margin="20 5 0 0">
                                         <Span>
-                                            <Run x:Name="ServerSecurityCount" Text="{Binding ServerSecurityCount}">
+                                            <Run x:Name="ServerSecurityCount" Text="{Binding IncursionCount}">
                                                 <Run.Style>
                                                     <Style TargetType="Run">
                                                         <Setter Property="Foreground" Value="#FF5555"/>
