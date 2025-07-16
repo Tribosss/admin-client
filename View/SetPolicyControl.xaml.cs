@@ -1,4 +1,5 @@
-﻿using admin_client.ViewModel;
+﻿using admin_client.Model;
+using admin_client.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,14 +30,24 @@ namespace admin_client.View
             this.DataContext = _vm;
         }
 
-        private void AgentOffButton_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.PublishMessageAtClient("AGENT<OFF>");
+        private void UserSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+      {
+            string keyword = UserSearchBox.Text;
+            _vm.LoadUserListByKeyword(keyword);
+            SearchUserList.Visibility = Visibility.Visible;
         }
 
-        private void AgentOnButton_Click(object sender, RoutedEventArgs e)
+        private void SearchUserList_LostFocus(object sender, RoutedEventArgs e)
         {
-            _vm.PublishMessageAtClient("AGENT<ON>");
+            SearchUserList.Visibility = Visibility.Hidden;
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Border border = (Border)sender;
+            UserData uData = (UserData)border.DataContext;
+            _vm.SelectedUser = uData;
+            SearchUserList.Visibility = Visibility.Hidden;
         }
     }
 }
