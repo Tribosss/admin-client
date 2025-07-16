@@ -6,7 +6,10 @@
              xmlns:local="clr-namespace:admin_client.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <Grid Margin="160 0 0 0">
+        <StackPanel Orientation="Horizontal">
+            <Button Width="90" Height="30" Name="AgentOnButton" Click="AgentOnButton_Click" >AGENT ON</Button>
+            <Button Width="90" Height="30" Name="AgentOffButton" Click="AgentOffButton_Click" >AGENT OFF</Button>
+        </StackPanel>
     </Grid>
 </UserControl>

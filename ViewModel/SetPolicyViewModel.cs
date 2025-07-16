@@ -11,10 +11,10 @@ namespace admin_client.ViewModel
     {
         public SetPolicyViewModel()
         {
-            PublishMessageAtClient();
+
         }
 
-        private async Task PublishMessageAtClient()
+        public async Task PublishMessageAtClient(string msg)
         {
             string exchangeName = "tribosss";
             string rountingKey = "policy.set";
@@ -34,7 +34,7 @@ namespace admin_client.ViewModel
                 arguments: null
             );
 
-            byte[] msgBodyBytes = Encoding.UTF8.GetBytes("HelloRabbitMQ");
+            byte[] msgBodyBytes = Encoding.UTF8.GetBytes(msg);
             BasicProperties props = new BasicProperties();
             await channel.BasicPublishAsync(
                 exchange: exchangeName,

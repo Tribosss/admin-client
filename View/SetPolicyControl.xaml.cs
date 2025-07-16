@@ -28,5 +28,15 @@ namespace admin_client.View
             _vm = new SetPolicyViewModel();
             this.DataContext = _vm;
         }
+
+        private void AgentOffButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.PublishMessageAtClient("AGENT<OFF>");
+        }
+
+        private void AgentOnButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.PublishMessageAtClient("AGENT<ON>");
+        }
     }
 }
