@@ -17,5 +17,7 @@ namespace admin_client.Model
         public int Age { get; set; }
         public string Salt { get; set; }
         public string CreatedAt { get; set; }
+        public bool IsActiveAgent { get; set; }
+        public bool IsActiveDomainBlock { get; set; }
     }
 }

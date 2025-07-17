@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:admin_client.View"
+             xmlns:local="clr-namespace:admin_client.View" xmlns:model="clr-namespace:admin_client.Model" d:DataContext="{d:DesignInstance Type=model:UserData}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1060">
     <UserControl.Resources>
@@ -78,12 +78,20 @@
                     <Border BorderBrush="#8c8c8c" BorderThickness="0 0 0 1" Grid.Row="1">
                         <StackPanel Orientation="Vertical" >
                             <DockPanel Margin="0 15 0 0">
-                                <TextBlock FontSize="16">에이전트</TextBlock>
+                                <TextBlock VerticalAlignment="Center" FontSize="13">기밀 유출 탐지 모니터링</TextBlock>
                                 <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
                                       Name="AgentToggleButton"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" 
-                                      IsChecked="False"/>
+                                      IsChecked="False" />
+                            </DockPanel>
+                            <DockPanel Margin="0 10 0 0">
+                                <TextBlock VerticalAlignment="Center" FontSize="13">유해사이트 차단</TextBlock>
+                                <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
+                                      Name="DomainBlockToggleButton"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center" 
+                                      IsChecked="False" />
                             </DockPanel>
                         </StackPanel>
                     </Border>
@@ -136,11 +144,11 @@
                             <StackPanel Grid.Row="1">
                                 <DockPanel Margin="0 15 0 0">
                                     <TextBlock FontWeight="Medium"  FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Left">사원명</TextBlock>
-                                    <TextBlock FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding SelectedUser.Name}" />
+                                    <TextBlock Name="SelectedName" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding SelectedUser.Name}" />
                                 </DockPanel>
                                 <DockPanel Margin="0 5 0 0">
                                     <TextBlock FontWeight="Medium"  FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Left">직급</TextBlock>
-                                    <TextBlock FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding SelectedUser.Position}" />
+                                    <TextBlock x:Name="SelectedPosition" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding SelectedUser.Position}" />
                                 </DockPanel>
                             </StackPanel>
                         </Grid>
@@ -156,12 +164,24 @@
                                 </StackPanel>
                             </Border>
                             <DockPanel Margin="0 15 0 0" Grid.Row="1" Height="23" VerticalAlignment="Top">
-                                <TextBlock FontSize="13">에이전트</TextBlock>
+                                <TextBlock FontSize="12" VerticalAlignment="Center">기밀 유출 탐지 모니터링</TextBlock>
                                 <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
                                       Name="IndividualAgentToggleButton"
+                                      Checked="IndividualAgentToggleButton_Checked"
+                                      Unchecked="IndividualAgentToggleButton_Unchecked"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center"
-                                      IsChecked="False"/>
+                                      IsChecked="{Binding IsIndividualAgentActive, Mode=TwoWay}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0 45 0 0" Grid.Row="1" Height="23" VerticalAlignment="Top">
+                                <TextBlock FontSize="12" VerticalAlignment="Center">유해사이트 차단</TextBlock>
+                                <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
+                                      Name="IndividualDomainBlockToggleButton"
+                                      Checked="IndividualAgentToggleButton_Checked"
+                                      Unchecked="IndividualAgentToggleButton_Unchecked"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding IsIndividualDomainBlockActive, Mode=TwoWay}"/>
                             </DockPanel>
                         </Grid>
                         <Grid Grid.Column="2"  Margin="15 20">

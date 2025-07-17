@@ -100,7 +100,8 @@ namespace admin_client.View
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             string updateQuery = $"update signup_requests set is_allow=true where temp_emp_id='{userData.Id}';";
-            string insertQuery = $"insert into employees(id, password, salt, created_at) values ('{userData.Id}', '{userData.Password}', '{userData.Salt}', '{now}');";
+            string insertEmpQuery = $"insert into employees(id, role_id, password, salt, created_at) values ('{userData.Id}', 2, '{userData.Password}', '{userData.Salt}', '{now}');";
+            string insertPolicyQuery = $"insert into policys(emp_id) values('{userData.Id}');";
 
             string? dbHost, dbPort, dbUid, dbPwd, dbName;
             string dbConnection;
@@ -128,10 +129,14 @@ namespace admin_client.View
                     connection.Open();
 
                     MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection);
-                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, connection);
+                    MySqlCommand insertEmpCmd = new MySqlCommand(insertEmpQuery, connection);
+                    MySqlCommand insertPolicyCmd = new MySqlCommand(insertPolicyQuery, connection);
 
-                    if (insertCmd.ExecuteNonQuery() == 1 && updateCmd.ExecuteNonQuery() == 1)
-                    {
+                    if (
+                        insertEmpCmd.ExecuteNonQuery() == 1 
+                        && updateCmd.ExecuteNonQuery() == 1 
+                        && insertPolicyCmd.ExecuteNonQuery() == 1
+                    ) {
                         Console.WriteLine("Success Update");
                         LoadRequests();
                     }

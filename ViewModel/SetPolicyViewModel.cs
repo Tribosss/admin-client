@@ -18,7 +18,6 @@ namespace admin_client.ViewModel
     class SetPolicyViewModel
     {
         public ObservableCollection<UserData> SearchUserList { get; } = new ObservableCollection<UserData>();
-        public UserData selectedUser;
         private UserData _selectedUser;
         public UserData SelectedUser
         {
@@ -27,6 +26,37 @@ namespace admin_client.ViewModel
             {
                 if (_selectedUser == value) return;
                 _selectedUser = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool? _isIndividualAgentActive;
+        public bool? IsIndividualAgentActive
+        {
+            get => _isIndividualAgentActive;
+            set
+            {
+                if (_isIndividualAgentActive == value) return;
+                _isIndividualAgentActive = value;
+                OnPropertyChanged();
+
+                if (_isIndividualAgentActive == true)
+                {
+                    PublishMessageAtClient("AGENT<ON>");
+                }
+                else if (_isIndividualAgentActive == false)
+                {
+                    PublishMessageAtClient("AGENT<OFF>");
+                }
+            }
+        }
+        private bool? _isIndividualDomainBlockActive;
+        public bool? IsIndividualDomainBlockActive
+        {
+            get => _isIndividualDomainBlockActive;
+            set
+            {
+                if (_isIndividualAgentActive == value) return;
+                _isIndividualDomainBlockActive = value;
                 OnPropertyChanged();
             }
         }
@@ -46,8 +76,10 @@ namespace admin_client.ViewModel
 
             SearchUserList.Clear();
 
-            string query = "select e.id, e.name, r.position from employees e ";
+            string query = "select e.id, e.name, r.position, p.is_active_agent, p.is_active_domain_block " +
+                "from employees e ";
             query += "inner join role r on r.id=e.role_id ";
+            query += "inner join policys p on p.emp_id=e.id ";
             query += $"where e.name like '%{keyword}%' or e.id like '%{keyword}%' or r.position like '%{keyword}%' ";
             query += "order by e.name desc ";
             query += "limit 15;";
@@ -85,17 +117,22 @@ namespace admin_client.ViewModel
                         string id = rdr[0].ToString()!;
                         string name = rdr[1].ToString()!;
                         string position = rdr[2].ToString()!;
+                        bool isActiveAgent = rdr[3].ToString() == "0" ? false: true;    
+                        bool isActiveDomainBlock = rdr[4].ToString() == "0" ? false: true;    
 
                         UserData uData = new UserData
                         {
                             Id = id,
                             Name = name,
-                            Position = position
+                            Position = position,
+                            IsActiveAgent = isActiveAgent,
+                            IsActiveDomainBlock = isActiveDomainBlock
                         };
 
                         SearchUserList.Add(uData);
                     }
 
+                    SelectedUser = null;
                     connection.Close();
                 }
 
@@ -108,6 +145,8 @@ namespace admin_client.ViewModel
 
         public async Task PublishMessageAtClient(string msg)
         {
+            if (_selectedUser == null || _selectedUser.Id == null) return;
+
             string exchangeName = "tribosss";
             string rountingKey = "policy.set";
             ConnectionFactory factory = new ConnectionFactory()
@@ -115,7 +154,7 @@ namespace admin_client.ViewModel
                 HostName = "localhost",
                 UserName = "guest",
                 Password = "guest",
-                ClientProvidedName = $"[12345678]"
+                ClientProvidedName = $"[{_selectedUser.Id}]"
             };
             IConnection conn = await factory.CreateConnectionAsync();
             IChannel channel = await conn.CreateChannelAsync();
@@ -135,7 +174,7 @@ namespace admin_client.ViewModel
                 basicProperties: props,
                 body: msgBodyBytes
             );
-            Console.WriteLine("Published Message");
+            Console.WriteLine($"Published Message: {msg}");
 
             channel.CloseAsync();
             conn.CloseAsync();

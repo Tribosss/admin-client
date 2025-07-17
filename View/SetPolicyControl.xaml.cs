@@ -47,7 +47,24 @@ namespace admin_client.View
             Border border = (Border)sender;
             UserData uData = (UserData)border.DataContext;
             _vm.SelectedUser = uData;
+            SelectedName.Text = uData.Name;
+            SelectedPosition.Text = uData.Position; 
+            _vm.IsIndividualAgentActive = uData.IsActiveAgent;
+            _vm.IsIndividualDomainBlockActive = uData.IsActiveDomainBlock;
+
             SearchUserList.Visibility = Visibility.Hidden;
+            _vm.SearchUserList.Clear();
+            UserSearchBox.Text = "";
+        }
+
+        private void IndividualAgentToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _vm.PublishMessageAtClient("AGENT<ON>");
+        }
+
+        private void IndividualAgentToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _vm.PublishMessageAtClient("AGENT<OFF>");
         }
     }
 }
