@@ -1,17 +1,11 @@
 ﻿using admin_client.Model;
 using DotNetEnv;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Utilities;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace admin_client.ViewModel
 {
@@ -27,10 +21,11 @@ namespace admin_client.ViewModel
                 if (_selectedUser == value) return;
                 _selectedUser = value;
                 OnPropertyChanged();
+
             }
         }
-        private bool? _isIndividualAgentActive;
-        public bool? IsIndividualAgentActive
+        private bool _isIndividualAgentActive = false;
+        public bool IsIndividualAgentActive
         {
             get => _isIndividualAgentActive;
             set
@@ -39,17 +34,16 @@ namespace admin_client.ViewModel
                 _isIndividualAgentActive = value;
                 OnPropertyChanged();
 
-                if (_isIndividualAgentActive == true)
+                if (_isIndividualAgentActive)
                 {
                     PublishMessageAtClient("AGENT<ON>");
-                }
-                else if (_isIndividualAgentActive == false)
+                } else
                 {
                     PublishMessageAtClient("AGENT<OFF>");
                 }
             }
         }
-        private bool? _isIndividualDomainBlockActive;
+        private bool? _isIndividualDomainBlockActive = false;
         public bool? IsIndividualDomainBlockActive
         {
             get => _isIndividualDomainBlockActive;
@@ -117,8 +111,8 @@ namespace admin_client.ViewModel
                         string id = rdr[0].ToString()!;
                         string name = rdr[1].ToString()!;
                         string position = rdr[2].ToString()!;
-                        bool isActiveAgent = rdr[3].ToString() == "0" ? false: true;    
-                        bool isActiveDomainBlock = rdr[4].ToString() == "0" ? false: true;    
+                        bool isActiveAgent = (bool)rdr[3];    
+                        bool isActiveDomainBlock = (bool)rdr[4];    
 
                         UserData uData = new UserData
                         {
@@ -143,18 +137,74 @@ namespace admin_client.ViewModel
             }
         }
 
+        public void SetIsActiveAgentByToggleButton(bool isActiveAgent)
+        {
+            if (SelectedUser == null || SelectedUser.Id == null) return;
+            string query = $@"
+                update policys
+                set is_active_agent={isActiveAgent}
+                where emp_id={SelectedUser.Id}";
+
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return;
+                    if (!rdr.Read()) return;
+
+                    if (cmd.ExecuteNonQuery() == 1)
+                    {
+                        Console.WriteLine("Success Update");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed Update");
+                    }
+
+                    connection.Close();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         public async Task PublishMessageAtClient(string msg)
         {
             if (_selectedUser == null || _selectedUser.Id == null) return;
 
             string exchangeName = "tribosss";
-            string rountingKey = "policy.set";
+            string rountingKey = $"policy.set.{SelectedUser.Id}";
             ConnectionFactory factory = new ConnectionFactory()
             {
                 HostName = "localhost",
                 UserName = "guest",
                 Password = "guest",
-                ClientProvidedName = $"[{_selectedUser.Id}]"
+                ClientProvidedName = $"[{SelectedUser.Id}]"
             };
             IConnection conn = await factory.CreateConnectionAsync();
             IChannel channel = await conn.CreateChannelAsync();

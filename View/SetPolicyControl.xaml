@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:admin_client.View" xmlns:model="clr-namespace:admin_client.Model" d:DataContext="{d:DesignInstance Type=model:UserData}"
+             xmlns:local="clr-namespace:admin_client.View" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1060">
     <UserControl.Resources>
@@ -167,8 +167,6 @@
                                 <TextBlock FontSize="12" VerticalAlignment="Center">기밀 유출 탐지 모니터링</TextBlock>
                                 <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
                                       Name="IndividualAgentToggleButton"
-                                      Checked="IndividualAgentToggleButton_Checked"
-                                      Unchecked="IndividualAgentToggleButton_Unchecked"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center"
                                       IsChecked="{Binding IsIndividualAgentActive, Mode=TwoWay}"/>
@@ -177,8 +175,6 @@
                                 <TextBlock FontSize="12" VerticalAlignment="Center">유해사이트 차단</TextBlock>
                                 <ToggleButton Style="{StaticResource ToggleSwitchStyle}"
                                       Name="IndividualDomainBlockToggleButton"
-                                      Checked="IndividualAgentToggleButton_Checked"
-                                      Unchecked="IndividualAgentToggleButton_Unchecked"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center"
                                       IsChecked="{Binding IsIndividualDomainBlockActive, Mode=TwoWay}"/>

@@ -48,7 +48,10 @@ namespace admin_client.View
             UserData uData = (UserData)border.DataContext;
             _vm.SelectedUser = uData;
             SelectedName.Text = uData.Name;
-            SelectedPosition.Text = uData.Position; 
+            SelectedPosition.Text = uData.Position;
+
+            IndividualAgentToggleButton.IsChecked = uData.IsActiveAgent;
+            IndividualDomainBlockToggleButton.IsChecked = uData.IsActiveDomainBlock;
             _vm.IsIndividualAgentActive = uData.IsActiveAgent;
             _vm.IsIndividualDomainBlockActive = uData.IsActiveDomainBlock;
 
@@ -57,14 +60,16 @@ namespace admin_client.View
             UserSearchBox.Text = "";
         }
 
-        private void IndividualAgentToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            _vm.PublishMessageAtClient("AGENT<ON>");
-        }
+        //private void IndividualAgentToggleButton_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    _vm.SetIsActiveAgentByToggleButton(true);
+        //    _vm.PublishMessageAtClient("AGENT<ON>");
+        //}
 
-        private void IndividualAgentToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            _vm.PublishMessageAtClient("AGENT<OFF>");
-        }
+        //private void IndividualAgentToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        //{
+        //    _vm.SetIsActiveAgentByToggleButton(false);
+        //    _vm.PublishMessageAtClient("AGENT<OFF>");
+        //}
     }
 }
