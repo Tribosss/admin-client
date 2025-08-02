@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Input;
 
 namespace admin_client.ViewModel
 {
@@ -43,15 +44,26 @@ namespace admin_client.ViewModel
                 }
             }
         }
-        private bool? _isIndividualDomainBlockActive = false;
-        public bool? IsIndividualDomainBlockActive
+        private bool _isIndividualDomainBlockActive = false;
+        public bool IsIndividualDomainBlockActive
         {
             get => _isIndividualDomainBlockActive;
             set
             {
-                if (_isIndividualAgentActive == value) return;
+                if (_isIndividualDomainBlockActive == value) return;
                 _isIndividualDomainBlockActive = value;
                 OnPropertyChanged();
+
+                if (_selectedUser == null) return;
+
+                if (!_isIndividualDomainBlockActive)
+                {
+                    PublishMessageAtClient("DOMAIN<CLEAR>");
+                } else
+                {
+                    List<string> blockedDomains = GetBlockedDomain(_selectedUser.Id);
+                    for (int i = 0; i < blockedDomains.Count; i++) PublishMessageAtClient($"DOMAIN<{blockedDomains[i]}>");
+                }
             }
         }
 
@@ -62,6 +74,56 @@ namespace admin_client.ViewModel
         public SetPolicyViewModel()
         {
 
+        }
+
+        private List<string> GetBlockedDomain(string empId)
+        {
+            string query = $@"select domain from blocked_domains where emp_id = '{empId}';";
+
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+            List<string> blockedDomains = [];
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return null;
+
+                    while (rdr.Read())
+                    {
+                        blockedDomains.Add(rdr[0].ToString());
+                    }
+
+                    connection.Close();
+                    return blockedDomains;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
         }
 
         public void LoadUserListByKeyword(string keyword)
