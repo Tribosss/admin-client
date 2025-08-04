@@ -8,6 +8,7 @@ namespace admin_client.Model
 {
     public class Log
     {
+        public string TargetId { get; set; }
         public string Msg { get; set; }
         public string Source { get; set; }
         public string Destination { get; set; }

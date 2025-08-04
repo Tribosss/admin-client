@@ -163,8 +163,65 @@
                 </StackPanel>
             </Border>
             <Border BorderBrush="#868686" BorderThickness="2" Grid.Row="1" Margin="0 0 0 20">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel>
+                    <Grid Width="810" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="2.5*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="대상 사번" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="1" Text="메시지" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="출발지" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="3" Text="목적지" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="기록일" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    </Grid>
+                    <ListBox x:Name="LogList" ItemsSource="{Binding Logs}" Width="840" Height="335" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 20" Background="#505050">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="5" Width="810">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*" />
+                                        <ColumnDefinition Width="2.5*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                               HorizontalAlignment="Center" 
+                               Text="{Binding TargetId}"
+                               Foreground="White"
+                               TextWrapping="Wrap" />
 
+                                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center" 
+                               Text="{Binding Msg}"
+                               Foreground="White"
+                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="2"
+                               Text="{Binding Source}"
+                               Foreground="White"
+                               HorizontalAlignment="Center" 
+                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="3"
+                               Text="{Binding Destination}"
+                               HorizontalAlignment="Center" 
+                               Foreground="White"
+                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="4"
+                               Text="{Binding DetectedAt}"
+                               HorizontalAlignment="Center" 
+                               Foreground="White"
+                               TextWrapping="Wrap" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </Border>
         </Grid>
