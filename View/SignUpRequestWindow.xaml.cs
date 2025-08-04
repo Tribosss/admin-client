@@ -102,6 +102,7 @@ namespace admin_client.View
             string updateQuery = $"update signup_requests set is_allow=true where temp_emp_id='{userData.Id}';";
             string insertEmpQuery = $"insert into employees(id, role_id, password, salt, created_at) values ('{userData.Id}', 2, '{userData.Password}', '{userData.Salt}', '{now}');";
             string insertPolicyQuery = $"insert into policys(emp_id) values('{userData.Id}');";
+            string insertBlockDomainQuery = $@"insert into blocked_domains (domain, emp_id) select domain, '{userData.Id}' from default_block_domains;";
 
             string? dbHost, dbPort, dbUid, dbPwd, dbName;
             string dbConnection;
@@ -131,11 +132,12 @@ namespace admin_client.View
                     MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection);
                     MySqlCommand insertEmpCmd = new MySqlCommand(insertEmpQuery, connection);
                     MySqlCommand insertPolicyCmd = new MySqlCommand(insertPolicyQuery, connection);
-
+                    MySqlCommand insertBlockDomainCmd = new MySqlCommand(insertBlockDomainQuery, connection);
                     if (
                         insertEmpCmd.ExecuteNonQuery() == 1 
                         && updateCmd.ExecuteNonQuery() == 1 
                         && insertPolicyCmd.ExecuteNonQuery() == 1
+                        && insertBlockDomainCmd.ExecuteNonQuery() == 1
                     ) {
                         Console.WriteLine("Success Update");
                         LoadRequests();

@@ -98,5 +98,15 @@ namespace admin_client.View
                 _vm.RemoveDefaultDomain(domainName);
             }
         }
+
+        private void DomainBlockToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.ToggleDefaultBlockDomain(DomainBlockToggleButton.IsChecked == true);
+        }
+
+        private void AgentToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.ToggleDefaultAgent(AgentToggleButton.IsChecked == true);
+        }
     }
 }

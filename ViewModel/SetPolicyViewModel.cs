@@ -72,6 +72,29 @@ namespace admin_client.ViewModel
             }
         }
 
+        private bool _isDefaultAgentActive = false;
+        public bool IsDefaultAgentActive
+        {
+            get => _isDefaultAgentActive;
+            set
+            {
+                if (_isDefaultAgentActive == value) return;
+                _isDefaultAgentActive = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _isDefaultDomainBlockActive = false;
+        public bool IsDefaultDomainBlockActive
+        {
+            get => _isDefaultDomainBlockActive;
+            set
+            {
+                if (_isDefaultDomainBlockActive == value) return;
+                _isDefaultDomainBlockActive = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -81,8 +104,87 @@ namespace admin_client.ViewModel
             IndividualBlockDomains.Clear();
             DefaultBlockDomains.Clear();
             LoadDefaultBlockDomains();
+            LoadDefaultPolicys();
         }
 
+        private void LoadDefaultPolicys()
+        {
+            string query = $@"SELECT COLUMN_NAME, COLUMN_DEFAULT
+                FROM INFORMATION_SCHEMA.COLUMNS
+                where TABLE_SCHEMA = 'tribosss' 
+                    AND TABLE_NAME = 'policys'
+                    AND (
+                        COLUMN_NAME = 'is_active_agent'
+                        or COLUMN_NAME = 'is_active_domain_block'
+                    ); ";
+
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return;
+
+                    while (rdr.Read())
+                    {
+                        string columnName = rdr.GetString("COLUMN_NAME");
+                        string columnDefault = rdr.GetString("COLUMN_DEFAULT");
+
+                        if (columnName == "is_active_agent")
+                        {
+                            IsDefaultAgentActive = columnDefault == "1";
+                        }
+                        else if (columnName == "is_active_domain_block")
+                        {
+                            IsDefaultDomainBlockActive = columnDefault == "1";
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+        public void ToggleDefaultBlockDomain(bool isActive)
+        {
+            string query = $@"ALTER TABLE policys
+                MODIFY COLUMN is_active_domain_block TINYINT(1) NOT NULL DEFAULT {isActive};";
+            QueryingWithSQL(query,
+                $"Success: Toggle Default Domain Block ({isActive})",
+                $"Fail: Toggle Default Domain Block ({isActive})"
+            );
+        }
+        public void ToggleDefaultAgent(bool isActive)
+        {
+            string query = $@"ALTER TABLE policys
+                MODIFY COLUMN is_active_agent TINYINT(1) NOT NULL DEFAULT {isActive};";
+            QueryingWithSQL(query,
+                $"Success: Toggle Default Agent ({isActive})",
+                $"Fail: Toggle Default Agent ({isActive})"
+            );
+        }
         public void InsertBlockDomain(string domain)
         {
             string query = $@"insert into blocked_domains(emp_id, domain)
@@ -260,7 +362,7 @@ namespace admin_client.ViewModel
 
                     MySqlCommand cmd = new MySqlCommand(query, connection);
 
-                    if (cmd.ExecuteNonQuery() == 1)
+                    if (cmd.ExecuteNonQuery() >= 0)
                     {
                         Console.WriteLine(successMsg);
                     }

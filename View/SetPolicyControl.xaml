@@ -78,7 +78,8 @@
                                       Name="AgentToggleButton"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" 
-                                      IsChecked="False" />
+                                      Click="AgentToggleButton_Click"
+                                      IsChecked="{Binding IsDefaultAgentActive, Mode=TwoWay}"/>
                             </DockPanel>
                             <DockPanel Margin="0 10 0 0">
                                 <TextBlock VerticalAlignment="Center" FontSize="13">유해사이트 차단</TextBlock>
@@ -86,7 +87,8 @@
                                       Name="DomainBlockToggleButton"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" 
-                                      IsChecked="False" />
+                                      Click="DomainBlockToggleButton_Click"
+                                      IsChecked="{Binding IsDefaultDomainBlockActive, Mode=TwoWay}"/>
                             </DockPanel>
                         </StackPanel>
                     </Border>
