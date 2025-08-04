@@ -13,6 +13,9 @@ namespace admin_client.ViewModel
     class SetPolicyViewModel
     {
         public ObservableCollection<UserData> SearchUserList { get; } = new ObservableCollection<UserData>();
+        public ObservableCollection<Domain> IndividualBlockDomains { get; } = new ObservableCollection<Domain>();
+        public ObservableCollection<Domain> DefaultBlockDomains { get; } = new ObservableCollection<Domain>();
+
         private UserData _selectedUser;
         public UserData SelectedUser
         {
@@ -22,9 +25,11 @@ namespace admin_client.ViewModel
                 if (_selectedUser == value) return;
                 _selectedUser = value;
                 OnPropertyChanged();
-
+                IndividualBlockDomains.Clear();
+                LoadIndividualBlockedDomains();
             }
         }
+
         private bool _isIndividualAgentActive = false;
         public bool IsIndividualAgentActive
         {
@@ -73,9 +78,203 @@ namespace admin_client.ViewModel
 
         public SetPolicyViewModel()
         {
-
+            IndividualBlockDomains.Clear();
+            DefaultBlockDomains.Clear();
+            LoadDefaultBlockDomains();
         }
 
+        public void InsertBlockDomain(string domain)
+        {
+            string query = $@"insert into blocked_domains(emp_id, domain)
+                values('{_selectedUser.Id}', '{domain}');";
+            QueryingWithSQL(query, "Success: Insert Individual Domain", "Fail: Insert Individual Domain");
+        }
+        public void AddBlockDomain(string domain)
+        {
+            Domain d = new Domain() { DomainName = domain };
+            IndividualBlockDomains.Add(d);
+        }
+        public void InsertDefaultBlockDomain(string domain)
+        {
+            string query = $@"insert into default_block_domains(domain)
+                values('{domain}');";
+            QueryingWithSQL(query, 
+                "Success: Insert Default doamin",
+                "Fail: Insert Default Domains"
+            );
+        }
+        public void AddDefaultBlockDomain(string domain)
+        {
+            Domain d = new Domain() { DomainName = domain };
+            DefaultBlockDomains.Add(d);
+        }
+        public void RemoveIndividualDomain(string domain)
+        {
+            if (SelectedUser == null) return;
+            string query = $@"delete from blocked_domains where domain='{domain}' and emp_id='{SelectedUser.Id}';";
+            QueryingWithSQL(query,
+                "Success: Remove Individual Domain",
+                "Fail: Remove Indiviudal Domain"
+            );
+            for (int i = 0; i < IndividualBlockDomains.Count; i++)
+            {
+                if (IndividualBlockDomains[i].DomainName == domain)
+                {
+                    IndividualBlockDomains.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        public void RemoveDefaultDomain(string domain)
+        {
+            string query = $@"delete from default_block_domains where domain='{domain}';";
+            QueryingWithSQL(query,
+                "Success: Remove Default domain",
+                "Fail: Remove Default Domain"
+            );
+            for (int i = 0; i < DefaultBlockDomains.Count; i++)
+            {
+                if (DefaultBlockDomains[i].DomainName == domain)
+                {
+                    DefaultBlockDomains.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        private void LoadIndividualBlockedDomains()
+        {
+            if (SelectedUser == null) return;
+
+            string query = $@"select domain from blocked_domains where emp_id={SelectedUser.Id};";
+
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return;
+
+                    while (rdr.Read())
+                    {
+                        Domain domain = new Domain() { DomainName = rdr[0].ToString() };
+                        IndividualBlockDomains.Add(domain);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+        private void LoadDefaultBlockDomains()
+        {
+            string query = $@"select domain from default_block_domains;";
+
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr == null) return;
+
+                    while (rdr.Read())
+                    {
+                        Domain domain = new Domain() { DomainName = rdr[0].ToString() };
+                        DefaultBlockDomains.Add(domain);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        private void QueryingWithSQL(string query, string successMsg, string failureMsg)
+        {
+            string? dbHost, dbPort, dbUid, dbPwd, dbName;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                    if (cmd.ExecuteNonQuery() == 1)
+                    {
+                        Console.WriteLine(successMsg);
+                    }
+                    else
+                    {
+                        Console.WriteLine(failureMsg);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
         private List<string> GetBlockedDomain(string empId)
         {
             string query = $@"select domain from blocked_domains where emp_id = '{empId}';";

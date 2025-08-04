@@ -60,16 +60,43 @@ namespace admin_client.View
             UserSearchBox.Text = "";
         }
 
-        //private void IndividualAgentToggleButton_Checked(object sender, RoutedEventArgs e)
-        //{
-        //    _vm.SetIsActiveAgentByToggleButton(true);
-        //    _vm.PublishMessageAtClient("AGENT<ON>");
-        //}
+        private void AddDefaultBlockDomainButton_Click(object sender, RoutedEventArgs e)
+        {
+            string domain = DomainTextBox.Text;
+            _vm.AddDefaultBlockDomain(domain);
+            _vm.InsertDefaultBlockDomain(domain);
+            DomainTextBox.Text = "";
+        }
 
-        //private void IndividualAgentToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        //{
-        //    _vm.SetIsActiveAgentByToggleButton(false);
-        //    _vm.PublishMessageAtClient("AGENT<OFF>");
-        //}
+        private void AddBlockDomainButton_Click(object sender, RoutedEventArgs e)
+        {
+            string domain = IndividualDomainTextBox.Text;
+            _vm.AddBlockDomain(domain);
+            _vm.InsertBlockDomain(domain);
+            IndividualDomainTextBox.Text = "";
+
+            if (_vm.SelectedUser != null && _vm.IsIndividualDomainBlockActive)
+            {
+                _vm.PublishMessageAtClient($"DOMAIN<{domain}>");
+            }
+        }
+
+        private void RemoveIndividualButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Domain domain)
+            {
+                string domainName = domain.DomainName;
+                _vm.RemoveIndividualDomain(domainName);
+            }
+        }
+
+        private void RemoveDefaultDomain_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Domain domain)
+            {
+                string domainName = domain.DomainName;
+                _vm.RemoveDefaultDomain(domainName);
+            }
+        }
     }
 }

@@ -7,7 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1060">
     <UserControl.Resources>
-        <!-- 토글 스위치 스타일 -->
         <Style x:Key="ToggleSwitchStyle" TargetType="ToggleButton">
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="22"/>
@@ -15,19 +14,16 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Grid>
-                            <!-- Background -->
                             <Border x:Name="SwitchBackground"
                                     CornerRadius="10"
                                     Background="#DDDDDD"
                                     SnapsToDevicePixels="True"/>
-                            <!-- Thumb -->
                             <Ellipse x:Name="SwitchThumb"
                                      Width="18" Height="18"
                                      Fill="White"
                                      Margin="4 2 22 2"/>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <!-- Checked -->
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="SwitchBackground"
                                         Property="Background"
@@ -36,7 +32,6 @@
                                         Property="Margin"
                                         Value="18 2 2 2"/>
                             </Trigger>
-                            <!-- Disabled -->
                             <Trigger Property="IsChecked" Value="False">
                                 <Setter TargetName="SwitchBackground"
                                         Property="Background"
@@ -66,7 +61,7 @@
                 <Grid Grid.Column="0" Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="0.5*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" BorderBrush="#8c8c8c" BorderThickness="0 0 0 2">
@@ -95,6 +90,46 @@
                             </DockPanel>
                         </StackPanel>
                     </Border>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>  
+                        <TextBlock Margin="0 10 0 0">유해사이트 목록</TextBlock>
+                        <Border Grid.Row="1"  BorderBrush="#8c8c8c" BorderThickness="0.5" Height="150">
+                            <ItemsControl ItemsSource="{Binding DefaultBlockDomains}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="200">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Name="DomainName" Text="{Binding DomainName}" Grid.Column="0" VerticalAlignment="Center"/>
+                                            <Button Grid.Column="1"
+                                                Name="RemoveDefaultDomain"
+                                                Click="RemoveDefaultDomain_Click"
+                                                Margin="0 2 0 0"
+                                                VerticalAlignment="Center"
+                                                Width="15"
+                                                Height="15"
+                                                FontSize="8"
+                                                FontWeight="Black"
+                                                Foreground="White"
+                                                Background="Red">
+                                                ×
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                        <TextBox BorderBrush="#8c8c8c" Name="DomainTextBox" Margin="0 5 0 0" Background="Transparent" Grid.Row="2"></TextBox>
+                        <Button Grid.Row="3" Name="AddDefaultBlockDomainButton" Click="AddDefaultBlockDomainButton_Click" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 5 0 5" Width="40" Height="20" BorderBrush="#8c8c8c" BorderThickness="1" Background="#D9D9D9">추가</Button>
+                    </Grid>
                 </Grid>
             </Border>
             <StackPanel Width="575" Orientation="Vertical" Height="460" Grid.Column="1" Margin="10 0 0 20" VerticalAlignment="Bottom">
@@ -102,7 +137,7 @@
                     <Border Width="485" Height="35" BorderThickness="2" BorderBrush="#8C8C8C" Margin="0 0 10 0" Padding="10 0 ">
                         <TextBox Width="475" BorderThickness="0" TextChanged="UserSearchBox_TextChanged" x:Name="UserSearchBox" Background="Transparent" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="35" ></TextBox>
                     </Border>
-                    <Button Width="60" Height="35" BorderBrush="#8c8c8c" BorderThickness="2" Background="#D9D9D9">조회</Button>
+                    <Button Width="60" Height="35" BorderBrush="#8c8c8c" BorderThickness="2" Background="#D9D9D9">적용</Button>
                 </StackPanel>
                 <Canvas Panel.ZIndex="3">
                     <ItemsControl LostFocus="SearchUserList_LostFocus" Name="SearchUserList" Margin="10 0 82 0" Visibility="Hidden" ItemsSource="{Binding SearchUserList}" Background="#e1e1e1" Panel.ZIndex="10">
@@ -186,11 +221,50 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border BorderBrush="#8c8c8c" BorderThickness="0 0 0 2">
+                                
                                 <StackPanel Orientation="Vertical" Grid.Column="0">
                                     <TextBlock FontSize="14" FontWeight="DemiBold" Margin="0 0 0 5">차단사이트 설정</TextBlock>
                                     <TextBlock FontSize="8" FontWeight="Light">개별 적용될 차단사이트를 설정하세요</TextBlock>
                                 </StackPanel>
                             </Border>
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0"  BorderBrush="#8c8c8c" BorderThickness="0.5" Margin="0 10 0 0">
+                                    <ItemsControl ItemsSource="{Binding IndividualBlockDomains}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Width="130">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="0.5*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Text="{Binding DomainName}" Grid.Column="0" VerticalAlignment="Center"/>
+                                                    <Button Grid.Column="1"
+                                                        Name="RemoveIndividualButton"
+                                                        Click="RemoveIndividualButton_Click"
+                                                        Margin="0 2 0 0"
+                                                        VerticalAlignment="Center"
+                                                        Width="15"
+                                                        Height="15"
+                                                        FontSize="8"
+                                                        FontWeight="Black"
+                                                        Foreground="White"
+                                                        Background="Red">
+                                                        ×
+                                                    </Button>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    </Border>
+                                    <TextBox Grid.Row="1" BorderBrush="#8c8c8c" Name="IndividualDomainTextBox" Margin="0 5 0 0" Background="Transparent" ></TextBox>
+                                    <Button Grid.Row="2" Name="AddBlockDomainButton" Click="AddBlockDomainButton_Click" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 5 0 5" Width="40" Height="20" BorderBrush="#8c8c8c" BorderThickness="1" Background="#D9D9D9">추가</Button>
+                                </Grid>
                         </Grid>
                     </Grid>
                 </Border>
