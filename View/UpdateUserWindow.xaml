@@ -89,9 +89,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="번호" Grid.Column="0" Margin="0 0 10 0" FontSize="15" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Text="이메일" Grid.Column="0" Margin="0 0 10 0" FontSize="15" VerticalAlignment="Center"></TextBlock>
                 <Border Grid.Column="2" Width="230" Height="30" BorderThickness="2" BorderBrush="#8C8C8C"  Padding="10 0" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBox TextAlignment="Right" BorderThickness="0" x:Name="UpdatePhoneBox" Background="Transparent" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="30" Width="205"></TextBox>
+                    <TextBox TextAlignment="Right" BorderThickness="0" x:Name="UpdateEmailBox" Background="Transparent" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="30" Width="205"></TextBox>
                 </Border>
             </Grid>
         </StackPanel>

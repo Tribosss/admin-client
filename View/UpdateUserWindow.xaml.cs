@@ -16,7 +16,7 @@ namespace admin_client.View
             InitializeComponent();
             UserId.Text = uData.Id;
             UpdateNameBox.Text = uData.Name;
-            UpdatePhoneBox.Text = uData.Email;
+            UpdateEmailBox.Text = uData.Email;
             UpdateAddressBox.Text = uData.Address;
             UpdateAgeBox.Text = uData.Age.ToString();
 
@@ -81,8 +81,8 @@ namespace admin_client.View
             string id = UserId.Text;
             string name = UpdateNameBox.Text;   
             if (string.IsNullOrEmpty(name) && _currentUserData.Name != name) return;
-            string phone = UpdatePhoneBox.Text;
-            if (string.IsNullOrEmpty(phone) && _currentUserData.Email != phone) return;
+            string email = UpdateEmailBox.Text;
+            if (string.IsNullOrEmpty(email) && _currentUserData.Email != email) return;
             string address = UpdateAddressBox.Text;
             if (string.IsNullOrEmpty(address) && _currentUserData.Address != address) return;
             string age = UpdateAgeBox.Text;
@@ -94,7 +94,7 @@ namespace admin_client.View
             {
                 Id = id,
                 Name = name,
-                Email = phone,
+                Email = email,
                 Address = address,
                 Age = Int32.Parse(age),
                 Position = position == "관리자" ? "ADMIN" : "STAFF"
@@ -109,7 +109,7 @@ namespace admin_client.View
             string roleId = ud.Position == "ADMIN" ? "1" : "2";
             string query = "update employees e set ";
             query += $"e.name='{ud.Name}'," +
-                $"e.phone='{ud.Email}'," +
+                $"e.email='{ud.Email}'," +
                 $"e.address='{ud.Address}'," +
                 $"e.age={ud.Age}," +
                 $"e.role_id={roleId} ";
