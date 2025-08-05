@@ -17,7 +17,7 @@ namespace admin_client.View
         string _selectedUserPosition;
         string _selectedTxt;
         public ObservableCollection<Log> Logs { get;  } = new ObservableCollection<Log>();
-        public ObservableCollection<UserData> UserDataList = new ObservableCollection<UserData>();
+        public ObservableCollection<UserData> UserDataList { get;  } = new ObservableCollection<UserData>();
 
         public ViewLogControl()
         {
@@ -28,6 +28,9 @@ namespace admin_client.View
         private void UserSearchButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(_selectedUserId)) return;
+
+            SelectedName.Text = _selectedUserName;
+            SelectedPosition.Text = _selectedUserPosition;
 
             Logs.Clear();
 
@@ -91,10 +94,11 @@ namespace admin_client.View
 
             if (string.IsNullOrEmpty(keyword)) return;
 
-            string query = "select e.id, e.name, r.position, p.is_active_agent, p.is_active_domain_block " +
+            UserDataList.Clear();
+
+            string query = "select e.id, e.name, r.position " +
                 "from employees e ";
             query += "inner join role r on r.id=e.role_id ";
-            query += "inner join policys p on p.emp_id=e.id ";
             query += $"where e.name like '%{keyword}%' or e.id like '%{keyword}%' or r.position like '%{keyword}%' ";
             query += "order by e.name desc ";
             query += "limit 15;";
@@ -132,16 +136,12 @@ namespace admin_client.View
                         string id = rdr[0].ToString()!;
                         string name = rdr[1].ToString()!;
                         string position = rdr[2].ToString()!;
-                        bool isActiveAgent = (bool)rdr[3];
-                        bool isActiveDomainBlock = (bool)rdr[4];
 
                         UserData uData = new UserData
                         {
                             Id = id,
                             Name = name,
-                            Position = position,
-                            IsActiveAgent = isActiveAgent,
-                            IsActiveDomainBlock = isActiveDomainBlock
+                            Position = position
                         };
 
                         UserDataList.Add(uData);
@@ -161,6 +161,19 @@ namespace admin_client.View
         private void UserList_LostFocus(object sender, RoutedEventArgs e)
         {
             SearchUserList.Visibility = Visibility.Hidden;
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.DataContext is UserData userData)
+            {
+                _selectedUserId = userData.Id;
+                _selectedUserName = userData.Name;
+                _selectedUserPosition = userData.Position;
+
+                UserSearchBox.Text = $"[{_selectedUserPosition}] {_selectedUserName} ({_selectedUserId})";
+                SearchUserList.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
