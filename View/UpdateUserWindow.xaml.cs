@@ -29,6 +29,51 @@ namespace admin_client.View
 
         private void DeleteUserBtn_Click(object sender, RoutedEventArgs e)
         {
+            string query = $"delete from employees where id='{_currentUserData.Id}';";
+            string? dbName, dbHost, dbPwd, dbUid, dbPort;
+            string dbConnection;
+
+            try
+            {
+                Env.Load();
+
+                dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                if (dbHost == null) throw new Exception(".env DB_HOST is null");
+                dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                if (dbPort == null) throw new Exception(".env DB_PORT is null");
+                dbUid = Environment.GetEnvironmentVariable("DB_UID");
+                if (dbUid == null) throw new Exception(".env DB_UID is null"); ;
+                dbPwd = Environment.GetEnvironmentVariable("DB_PWD");
+                if (dbPwd == null) throw new Exception(".env DB_PWD is null");
+                dbName = Environment.GetEnvironmentVariable("DB_NAME");
+                if (dbName == null) throw new Exception(".env DB_NAME is null");
+
+                dbConnection = $"Server={dbHost};Port={dbPort};Database={dbName};Uid={dbUid};Pwd={dbPwd}";
+
+                using (MySqlConnection connection = new MySqlConnection(dbConnection))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                    if (cmd.ExecuteNonQuery() == 1)
+                    {
+                        Console.WriteLine("Success Delete");
+                        Close();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed Delete");
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
         }
 
         private void UpdateUserBtn_Click(object sender, RoutedEventArgs e)

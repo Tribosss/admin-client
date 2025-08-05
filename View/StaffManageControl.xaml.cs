@@ -164,6 +164,8 @@ namespace admin_client.View
             if (!(sender is DataGridRow row && row.Item is UserData clickedUserData)) return;
 
             ShowClickUserRow.Invoke(clickedUserData);
+            GetUserListByKeyword("", "", "");
+            GetSignUpRequestCount();
         }
 
         private void CheckSignUpRequestBtn_Click(object sender, RoutedEventArgs e)
@@ -171,6 +173,8 @@ namespace admin_client.View
             if (ShowSignUpRequestors == null) return;
 
             ShowSignUpRequestors.Invoke();
+            GetUserListByKeyword("", "", "");
+            GetSignUpRequestCount();
         }
     }
 }
