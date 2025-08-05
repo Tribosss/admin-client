@@ -113,7 +113,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="1.1*" Header="전화번호" Binding="{Binding Phone}" >
+                <DataGridTextColumn Width="2*" Header="이메일" Binding="{Binding Email}" >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextAlignment" Value="Center"/>
@@ -121,7 +121,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="3*" Header="주소" Binding="{Binding Address}" >
+                <DataGridTextColumn Width="2*" Header="주소" Binding="{Binding Address}" >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextAlignment" Value="Center"/>

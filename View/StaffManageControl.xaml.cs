@@ -82,7 +82,7 @@ namespace admin_client.View
 
         private void GetUserListByKeyword(string idKey, string positionKey, string nameKey)
         {
-            string query = "select e.id, e.name, r.position, e.phone, e.address, e.created_at from employees e ";
+            string query = "select e.id, e.name, r.position, e.email, e.address, e.created_at from employees e ";
             query += "inner join role r on r.id=e.role_id ";
             if (!string.IsNullOrEmpty(nameKey) || !string.IsNullOrEmpty(idKey) || !string.IsNullOrEmpty(positionKey))
             {
@@ -130,7 +130,7 @@ namespace admin_client.View
                         string id = rdr[0].ToString()!;
                         string name = rdr[1].ToString()!;
                         string position = rdr[2].ToString()!;
-                        string phone = rdr[3].ToString()!;
+                        string email = rdr[3].ToString()!;
                         string address = rdr[4].ToString()!;
                         string createdAt = rdr[5].ToString()!;
 
@@ -139,7 +139,7 @@ namespace admin_client.View
                             Id = id,
                             Name = name,
                             Position = position,
-                            Phone = phone,
+                            Email = email,
                             Address=address,
                             CreatedAt=createdAt
                         };
