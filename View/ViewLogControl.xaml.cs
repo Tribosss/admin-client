@@ -17,7 +17,7 @@ namespace admin_client.View
         string _selectedUserPosition;
         string _selectedTxt;
         public ObservableCollection<Log> Logs { get;  } = new ObservableCollection<Log>();
-        public List<UserData> UserDataList = [];
+        public ObservableCollection<UserData> UserDataList = new ObservableCollection<UserData>();
 
         public ViewLogControl()
         {
@@ -30,7 +30,6 @@ namespace admin_client.View
             if (string.IsNullOrEmpty(_selectedUserId)) return;
 
             Logs.Clear();
-            UserList.Visibility = Visibility.Hidden;
 
             string query = "select s.msg, s.source_ip, s.source_port, s.dest_ip, s.dest_port, s.detected_at from employees e ";
             query += "inner join suspicion_logs s on s.emp_id=e.id ";
@@ -86,61 +85,16 @@ namespace admin_client.View
             }
         }
 
-        private void UserList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (UserList.SelectedItem == null) return;
-            _selectedTxt = UserList.SelectedItem!.ToString()!;
-            if (string.IsNullOrEmpty(_selectedTxt)) return;
-
-            _selectedUserPosition = _selectedTxt.Split("[")[1].Split("]")[0].Trim();
-            _selectedUserName = _selectedTxt.Split("]")[1].Split("(")[0].Trim();
-            _selectedUserId = _selectedTxt.Split("(")[1].TrimEnd(')');
-
-            UserSearchBox.Text = _selectedTxt;
-
-            SelectedPosition.Text = _selectedUserPosition;
-            SelectedName.Text = _selectedUserName;
-
-            UserList.Visibility = Visibility.Hidden;
-        }
-
         private void UserSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (UserSearchBox.Text == _selectedTxt) return;
-
-            string listTxt, position = "";
             string keyword = UserSearchBox.Text;
-
-            _selectedUserId = "";
-            _selectedUserName = "";
-            _selectedUserPosition = "";
-            Logs.Clear();
-            UserList.Visibility = Visibility.Hidden;
 
             if (string.IsNullOrEmpty(keyword)) return;
 
-            List<UserData> uDataList = GetUserListByKeyword(keyword);
-            if (uDataList == null || uDataList.Count <= 0) return;
-
-            for (int i = 0; i < uDataList.Count; i++)
-            {
-                switch (uDataList[i].Position)
-                {
-                    case "ADMIN": position = "관리자"; break;
-                    case "STAFF": position = "사원"; break;
-                }
-                listTxt = $"[{position}] {uDataList[i].Name}({uDataList[i].Id})";
-                UserList.Items.Add(listTxt);
-            }
-            UserList.Visibility = Visibility.Visible;
-        }
-
-        private List<UserData> GetUserListByKeyword(string keyword)
-        {
-            if (string.IsNullOrEmpty(keyword)) return null;
-
-            string query = "select e.id, e.name, r.position from employees e ";
+            string query = "select e.id, e.name, r.position, p.is_active_agent, p.is_active_domain_block " +
+                "from employees e ";
             query += "inner join role r on r.id=e.role_id ";
+            query += "inner join policys p on p.emp_id=e.id ";
             query += $"where e.name like '%{keyword}%' or e.id like '%{keyword}%' or r.position like '%{keyword}%' ";
             query += "order by e.name desc ";
             query += "limit 15;";
@@ -171,45 +125,42 @@ namespace admin_client.View
 
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr == null) return null;
-
-                    UserList.Items.Clear();
-                    UserDataList.Clear();
+                    if (rdr == null) return;
 
                     while (rdr.Read())
                     {
                         string id = rdr[0].ToString()!;
                         string name = rdr[1].ToString()!;
                         string position = rdr[2].ToString()!;
+                        bool isActiveAgent = (bool)rdr[3];
+                        bool isActiveDomainBlock = (bool)rdr[4];
 
                         UserData uData = new UserData
                         {
                             Id = id,
                             Name = name,
-                            Position = position
+                            Position = position,
+                            IsActiveAgent = isActiveAgent,
+                            IsActiveDomainBlock = isActiveDomainBlock
                         };
 
                         UserDataList.Add(uData);
                     }
-
                     connection.Close();
-
-                    UserList.Height = UserDataList.Count * 24;
-
-                    return UserDataList;
                 }
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
-                return null;
+                Console.WriteLine(ex.ToString());
             }
+
+            SearchUserList.Visibility = Visibility.Visible;
         }
 
         private void UserList_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserList.Visibility = Visibility.Hidden;
+            SearchUserList.Visibility = Visibility.Hidden;
         }
     }
 }

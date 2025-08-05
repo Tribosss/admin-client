@@ -60,7 +60,7 @@ namespace admin_client.ViewModel
                 "   from employees e ";
             query += "inner join suspicion_logs s on s.emp_id=e.id ";
             query += "inner join role r on r.id=e.role_id ";
-            query += "desc s.detected_at";
+            query += "desc s.detected_at;";
 
             string? dbHost, dbPort, dbUid, dbPwd, dbName;
             string msg, source, destination, detectedAt, targetId;

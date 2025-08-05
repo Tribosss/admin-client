@@ -128,34 +128,39 @@ namespace admin_client.View
                 using (MySqlConnection connection = new MySqlConnection(dbConnection))
                 {
                     connection.Open();
-
-                    MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection);
-                    MySqlCommand insertEmpCmd = new MySqlCommand(insertEmpQuery, connection);
-                    MySqlCommand insertPolicyCmd = new MySqlCommand(insertPolicyQuery, connection);
-                    MySqlCommand insertBlockDomainCmd = new MySqlCommand(insertBlockDomainQuery, connection);
-                    if (
-                        insertEmpCmd.ExecuteNonQuery() == 1 
-                        && updateCmd.ExecuteNonQuery() == 1 
-                        && insertPolicyCmd.ExecuteNonQuery() == 1
-                        && insertBlockDomainCmd.ExecuteNonQuery() == 1
-                    ) {
-                        Console.WriteLine("Success Update");
-                        LoadRequests();
-                    }
-                    else
+                    try
                     {
-                        Console.WriteLine("Failed Update");
+                        MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection);
+                        MySqlCommand insertEmpCmd = new MySqlCommand(insertEmpQuery, connection);
+                        MySqlCommand insertPolicyCmd = new MySqlCommand(insertPolicyQuery, connection);
+                        MySqlCommand insertBlockDomainCmd = new MySqlCommand(insertBlockDomainQuery, connection);
+                        if (
+                            insertEmpCmd.ExecuteNonQuery() == 1 
+                            && updateCmd.ExecuteNonQuery() == 1 
+                            && insertPolicyCmd.ExecuteNonQuery() == 1
+                            && insertBlockDomainCmd.ExecuteNonQuery() == 1
+                        ) {
+                            Console.WriteLine("Success Update");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed Update");
+                        }
+                        LoadRequests();
+                    } catch(MySqlException mse)
+                    {
+                        Console.WriteLine(mse.ToString());
                     }
 
                     connection.Close();
-                    return;
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
+
+            return;
         }
 
         private UserData GetRequestorById(string tempEmpId)

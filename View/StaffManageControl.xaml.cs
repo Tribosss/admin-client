@@ -84,7 +84,15 @@ namespace admin_client.View
         {
             string query = "select e.id, e.name, r.position, e.phone, e.address, e.created_at from employees e ";
             query += "inner join role r on r.id=e.role_id ";
-            query += $"where e.name like '%{nameKey}%' and e.id like '%{idKey}%' and r.position like '%{positionKey}%' ";
+            if (!string.IsNullOrEmpty(nameKey) || !string.IsNullOrEmpty(idKey) || !string.IsNullOrEmpty(positionKey))
+            {
+                query += @$"where 
+                        {nameKey ?? $"e.name like '%{nameKey}%'"}
+                        {(!string.IsNullOrEmpty(nameKey) && !string.IsNullOrEmpty(idKey) ? " and " : "")}
+                        {idKey ?? $"e.id like '%{idKey}%'"}
+                        {(!string.IsNullOrEmpty(positionKey) && !string.IsNullOrEmpty(idKey) ? " and " : "")}
+                        {positionKey ?? $"r.position like '%{positionKey}%'"} ";
+            }
             query += "order by e.name desc;";
 
             string? dbHost, dbPort, dbUid, dbPwd, dbName;
